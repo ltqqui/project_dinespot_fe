@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, ChefHat, Utensils } from 'lucide-react';
 import axios from 'axios';
+const BaseURrl = import.meta.env.VITE_BASE_URL;
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -50,7 +51,7 @@ const LoginPage = () => {
     if (!validateForm()) return;
     
     try {
-        const res= await axios.post('http://localhost:1303/v1/api/users/login',{
+        const res= await axios.post(`${BaseURrl}/v1/api/users/login`,{
             email:formData.email,
             password: formData.password
         })  
