@@ -14,7 +14,8 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
+  --color-primary: #f97316;
+  --color-secondary: #6c757d;
 }
 
 #root{
@@ -32,7 +33,7 @@ a:hover {
 }
 
 body {
-  margin: 0;
+  margin: 0 !important;
   display: flex;
   place-items: center;
   min-width: 320px;
@@ -74,4 +75,13 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+
+.primary_color_text{
+  color: #f97316 !important;
+}
+
+.primary_color_bg{
+  background: #f97316 !important;
 }
