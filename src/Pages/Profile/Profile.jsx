@@ -14,6 +14,7 @@ import {
     Descriptions,
     Space,
     Divider,
+    Image,
 } from 'antd';
 import {
     UserOutlined,
@@ -28,7 +29,7 @@ import {
     CalendarOutlined,
     ClockCircleOutlined
 } from '@ant-design/icons';
-import '../../assets/css/login.css';
+import '../../assets/css/profile.css';
 import axios from 'axios';
 import showMessage from '../../Helper/showMessage';
 import { API_BASE_URL } from '../../settings/config'
@@ -45,6 +46,9 @@ const Profile = () => {
     const [loading, setLoading] = useState(false);
     const [editing, setEditing] = useState(false);
     const profileData = useSelector((state) => state.staff.user);
+    const [previewOpen, setPreviewOpen] = useState(false);
+    const [previewImage, setPreviewImage] = useState('');
+    const [fileList, setFileList] = useState([])
 
 
     const onFinish = async (values) => {
@@ -91,6 +95,15 @@ const Profile = () => {
         return dayjs(timestamp).format('DD/MM/YYYY HH:mm');
     };
 
+    const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+
+    const handlePreview = async file => {
+        if (!file.url && !file.preview) {
+            file.preview = await getBase64(file.originFileObj);
+        }
+        setPreviewImage(file.url || file.preview);
+        setPreviewOpen(true);
+    };
 
 
 
@@ -108,17 +121,22 @@ const Profile = () => {
                     {/* Header Section */}
                     <div className="logo-section" style={{ marginBottom: 30 }}>
                         <div style={{ position: 'relative', display: 'inline-block' }}>
-                            <Avatar
-                                size={80}
-                                src={profileData.avatar}
-                                icon={<UserOutlined />}
-                                style={{ border: '4px solid #fff', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
+                            <Image
+                                // wrapperStyle={{ display: 'none' }}
+                                preview={{
+                                    visible: previewOpen,
+                                    onVisibleChange: visible => setPreviewOpen(visible),
+                                    afterOpenChange: visible => !visible && setPreviewImage(''),
+                                }}
+                                style={{ border: '4px solid #fff', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', width:80, height:80, borderRadius:'50%' }}
+                                rootClassName='profile-avatar'
+                                src={profileData?.avatar}
                             />
                             {editing && (
                                 <Upload
                                     name="avatar"
                                     showUploadList={false}
-                                    action={`${API_BASE_URL}/v1/api/upload/avatar`}
+                                    fileList={fileList}
                                     onChange={handleAvatarUpload}
                                     style={{
                                         position: 'absolute',
@@ -134,6 +152,7 @@ const Profile = () => {
                                     />
                                 </Upload>
                             )}
+
                         </div>
                         <Title level={2} style={{ margin: '16px 0 8px', color: 'white' }}>
                             {profileData.fullName}

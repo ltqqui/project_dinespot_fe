@@ -27,7 +27,7 @@ import '../../assets/css/login.css';
 import axios from 'axios';
 import showMessage from '../../Helper/showMessage';
 import { API_BASE_URL } from '../../settings/config'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from "react-i18next";
 
 const { Title, Text } = Typography;
@@ -36,6 +36,7 @@ const LoginPage = () => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -49,6 +50,7 @@ const LoginPage = () => {
       );
       localStorage.setItem('token', response?.data?.data?.accessToken)
       showMessage(response?.data?.message, 'success')
+      navigate('/home')
 
     } catch (error) {
       console.error(error?.response?.data?.message)
